@@ -5,6 +5,7 @@ const connectionUrl =
 const dbName = "cars";
 const collectionName = "events";
 
+let mongoClient;
 let db;
 
 const initDB = () =>
@@ -12,7 +13,8 @@ const initDB = () =>
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 	}).then((client) => {
-		db = client.db(dbName);
+		mongoClient = client
+		db = mongoClient.db(dbName);
 	});
 
 const insertItem = (event) => {
@@ -35,7 +37,29 @@ const dropCollection = () => {
 	collection.drop(function (err, delOK) {
 		if (err) throw err;
 		if (delOK) console.log("Collection deleted");
-		db.close();
+		client.close();
 	});
 };
-module.exports = { initDB, insertItem, getItems, updateQuantity, dropCollection };
+
+const printCollection = () => {
+	const collection = db.collection(collectionName);
+	collection.find().toArray(function (err, docs) {
+		console.log(JSON.stringify(docs));
+	});
+};
+
+
+module.exports = {
+	initDB,
+	insertItem,
+	getItems,
+	updateQuantity,
+	dropCollection,
+	printCollection,
+};
+
+// initDB().then(() => {
+// 	console.log("Mongo is connected");
+// 	printCollection();
+// 	mongoClient.close()
+// });

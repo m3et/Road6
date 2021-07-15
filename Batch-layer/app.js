@@ -1,11 +1,13 @@
 const bodyParser = require('body-parser')
 const { json } = require('express')
-const { initDB, insertItem } = require('./db')
+const { initDB, insertItem, printCollection } = require('./db')
 const consumer = require('./kafkaConsume')
 
 
 initDB().then(() => {
   console.log('Mongo is connected')
+  printCollection()
+  
 })
 
 consumer.on("data", function (msg) {
@@ -24,7 +26,6 @@ consumer.on("data", function (msg) {
 // init().then(() => {
 //   console.log('starting server on port 3000')
 //   app.listen(3000)
-
 
 
 
