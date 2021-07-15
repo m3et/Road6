@@ -26,18 +26,6 @@ const simulator = function () {
 	// return JSON;
 };
 
-// function async trackEvents(){
-// 	JSONObj = await simulator()
-// 	// for entrnce untile exist{
-// 	// 	send enter
-// 	// 	sleep 15
-// 	prduce
-// 	// 	send exit
-
-// 	// }
-// 	// send exit from road
-
-// }
 
 /**
  *

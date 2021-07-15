@@ -1,5 +1,5 @@
 const uuid = require("uuid");
-const kafkaConfig = require("./kafkaConfig");
+const kafkaConfig = require("./config");
 const Kafka = require("node-rdkafka");
 
 const prefix = "dpl7bns4-";

@@ -1,5 +1,4 @@
 const simulator = require("./simulator");
-// const produce = require("./producer");
 const produce_msg = require('./producer')
 
 const time = 15 * 1000
