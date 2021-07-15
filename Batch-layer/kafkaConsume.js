@@ -2,11 +2,10 @@
 
 const uuid = require("uuid");
 const Kafka = require("node-rdkafka");
-const kafkaConfig = require("./kafkaConfig");
+const kafkaConfig = require("./config");
 
 const prefix = "dpl7bns4-";
 const topic = `${prefix}new`;
-
 
 const topics = [topic];
 const consumer = new Kafka.KafkaConsumer(kafkaConfig, {
@@ -20,13 +19,9 @@ consumer.on("error", function (err) {
 consumer.on("ready", function (arg) {
 	console.log(`Consumer ${arg.name} ready`);
 	consumer.subscribe(topics);
+	console.log(`Consumer ${arg.name} is subscribe to ${topics}`);
 	consumer.consume();
 });
-
-// consumer.on("data", function (m) {
-// 	console.log(m.value.toString());
-// 	// insert doc to DB
-// });
 
 consumer.on("disconnected", function (arg) {
 	process.exit();
@@ -40,4 +35,4 @@ consumer.on("event.log", function (log) {
 });
 consumer.connect();
 
-module.exports = consumer
+module.exports = consumer;

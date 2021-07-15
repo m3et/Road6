@@ -42,5 +42,6 @@ const trackCar = async function () {
 };
 
 // call the `trackCar` function and log an error if it occurs
-setInterval(trackCar, 1000);
+setInterval(trackCar, 10000);
+
 // trackCar()

@@ -12,6 +12,7 @@ function sleep(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+
 producer.on("ready", function (arg) {
     console.log(`Producer is ready`);
 });

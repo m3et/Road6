@@ -1,6 +1,6 @@
 const bodyParser = require('body-parser')
 const { json } = require('express')
-const { initDB, insertItem } = require('./database')
+const { initDB, insertItem } = require('./db')
 const consumer = require('./kafkaConsume')
 
 
@@ -9,7 +9,6 @@ initDB().then(() => {
 })
 
 consumer.on("data", function (msg) {
-x
   console.log(msg.value.toString());
   insertItem((JSON.parse(msg.value.toString())))
 

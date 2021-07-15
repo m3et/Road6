@@ -1,4 +1,5 @@
 FROM node:lts-alpine
+# RUN apt-get update && apt-get upgrade -y
 
 RUN apk --no-cache add \
       bash \
