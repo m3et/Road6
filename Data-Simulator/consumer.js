@@ -2,7 +2,7 @@
 
 const uuid = require("uuid");
 const Kafka = require("node-rdkafka");
-const kafkaConfig = require("./kafkaConfig");
+const kafkaConfig = require("./config");
 
 const prefix = "dpl7bns4-";
 const topic = `${prefix}new`;

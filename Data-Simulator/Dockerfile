@@ -1,5 +1,17 @@
-FROM andreysenov/node-gyp
+FROM node:lts-alpine
 
+RUN apk --no-cache add \
+      bash \
+      g++ \
+      ca-certificates \
+      lz4-dev \
+      musl-dev \
+      cyrus-sasl-dev \
+      openssl-dev \
+      make \
+      python
+
+RUN apk add --no-cache --virtual .build-deps gcc zlib-dev libc-dev bsd-compat-headers py-setuptools bash
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -16,4 +28,4 @@ RUN npm install
 COPY . .
 
 EXPOSE 8080
-CMD [ "node", "server.js" ]
+CMD [ "node", "app.js" ]
