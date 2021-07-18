@@ -14,7 +14,7 @@ function sleep(ms) {
 
 
 producer.on("ready", function (arg) {
-    console.log(`Producer is ready`);
+    console.log(`Producer ${arg.name} is ready on topic ${topic}`);
 });
 
 const produce_msg = async (msg) => {
@@ -37,7 +37,7 @@ const produce_msg = async (msg) => {
         await producer.produce(topic, -1, genMessage(_msg), uuid.v4());
 
         // if the message is written successfully, log it and increment `i`
-        producer.flush(0)
+        producer.flush(1)
         console.log("writes: ", msg);
     } catch (err) {
         console.error("could not write message " + err);

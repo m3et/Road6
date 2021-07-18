@@ -10,6 +10,7 @@ const consumer = new Kafka.KafkaConsumer(kafkaConfig, {
 	"auto.offset.reset": "beginning",
 });
 
+
 consumer.on("error", function (err) {
 	console.error(err);
 });
@@ -32,7 +33,7 @@ consumer.on("event.error", function (err) {
 	process.exit(1);
 });
 consumer.on("event.log", function (log) {
-	console.log(log);
+	// console.log(log);
 });
 
 consumer.connect();

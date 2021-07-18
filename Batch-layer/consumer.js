@@ -10,6 +10,8 @@ const consumer = new Kafka.KafkaConsumer(kafkaConfig, {
 	"auto.offset.reset": "beginning",
 });
 
+consumer.connect();
+
 consumer.on("error", function (err) {
 	console.error(err);
 });
@@ -17,22 +19,26 @@ consumer.on("error", function (err) {
 consumer.on("ready", function (arg) {
 	console.log(`Consumer ${arg.name} ready`);
 	consumer.subscribe(topics);
-	console.log(`Consumer ${arg.name} subscribed to ${topics}`);
+	console.log(`Consumer ${arg.name} is subscribe to ${topics}`);
 	consumer.consume();
 });
 
-consumer.on("data", function (m) {
-	console.log(m.value.toString());
-});
 consumer.on("disconnected", function (arg) {
 	process.exit();
 });
+
 consumer.on("event.error", function (err) {
 	console.error(err);
 	process.exit(1);
 });
 consumer.on("event.log", function (log) {
-	console.log(log);
+	// console.log(log);
 });
 
-consumer.connect();
+consumer.on("data", function (msg) {
+	console.log(msg.value.toString());
+	// insertDoc((JSON.parse(msg.value.toString())))
+  });
+
+
+module.exports = consumer;

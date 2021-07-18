@@ -1,65 +1,94 @@
-const { MongoClient, ObjectId } = require("mongodb");
+const { MongoClient } = require('mongodb')
+// or as an es module:
+// import { MongoClient } from 'mongodb'
 
-const connectionUrl =
+// Connection URL
+const url =
 	"mongodb+srv://raphael:SpwZ8tKKKVyE419m@datalake.idnsl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-const dbName = "cars";
-const collectionName = "events";
+const client = new MongoClient(url)
 
-let mongoClient;
-let db;
+// Database Name
+const dbName = 'cars'
+let db
+let collection
 
-const initDB = () =>
-	MongoClient.connect(connectionUrl, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	}).then((client) => {
-		mongoClient = client
-		db = mongoClient.db(dbName);
-	});
+const initDB = async function () {
+	// Use connect method to connect to the server
+	await client.connect()
+	db = client.db(dbName)
+	collection = db.collection('events')
+	return 'Connected successfully to MongoDB server'
+}
 
-const insertItem = (event) => {
-	const collection = db.collection(collectionName);
-	return collection.insertOne(event);
-};
+const closeDB = async function() {
+	await client.close()
+}
 
-const getItems = () => {
-	const collection = db.collection(collectionName);
-	return collection.find({}).toArray();
-};
-
-const updateQuantity = (id, quantity) => {
-	const collection = db.collection(collectionName);
-	return collection.updateOne({ _id: ObjectId(id) }, { $inc: { quantity } });
-};
-
-const dropCollection = () => {
-	const collection = db.collection(collectionName);
-	collection.drop(function (err, delOK) {
-		if (err) throw err;
-		if (delOK) console.log("Collection deleted");
-		client.close();
-	});
-};
-
-const printCollection = () => {
-	const collection = db.collection(collectionName);
-	collection.find().toArray(function (err, docs) {
-		console.log(JSON.stringify(docs));
-	});
-};
-
+const insertDoc = async function (doc) {
+	const insertResult = await collection.insertOne(doc)
+	console.log('Inserted document =>', doc)
+}
 
 module.exports = {
 	initDB,
-	insertItem,
-	getItems,
-	updateQuantity,
-	dropCollection,
-	printCollection,
+	closeDB,
+	insertDoc
 };
 
-// initDB().then(() => {
-// 	console.log("Mongo is connected");
-// 	printCollection();
-// 	mongoClient.close()
-// });
+
+// main()
+// 	.then(console.log)
+// 	.catch(console.error)
+// 	.finally(() => client.close())
+
+
+// const { MongoClient } = require("mongodb");
+
+// const connectionUrl =
+// 	"mongodb+srv://raphael:SpwZ8tKKKVyE419m@datalake.idnsl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+
+
+// const dbName = "cars";
+// const collectionName = "events";
+
+// let _db;
+
+// const initDB = () =>
+// 	MongoClient.connect(connectionUrl, { useNewUrlParser: true }).then((client) => {
+// 		_db = client.db(dbName)
+// 	})
+
+// const insertItem = (event) => {
+// 	const collection = _db.collection(collectionName);
+// 	return collection.insertOne(event);
+// };
+
+// const getItems = () => {
+// 	const collection = _db.collection(collectionName);
+// 	return collection.find({}).toArray();
+// };
+
+// const dropCollection = () => {
+// 	const collection = _db.collection(collectionName);
+// 	collection.drop(function (err, delOK) {
+// 		if (err) throw err;
+// 		if (delOK) console.log("Collection deleted");
+// 		client.close();
+// 	});
+// };
+
+// const printCollection = () => {
+// 	const collection = _db.collection(collectionName);
+// 	collection.find().toArray(function (err, docs) {
+// 		console.log(JSON.stringify(docs));
+// 	});
+// };
+
+
+// module.exports = {
+// 	initDB,
+// 	insertItem,
+// 	getItems,
+// 	dropCollection,
+// 	printCollection,
+// };

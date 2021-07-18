@@ -1,15 +1,12 @@
-const { initDB, insertDoc, closeDB } = require('./db')
+const bodyParser = require('body-parser')
+const { json } = require('express')
 const consumer = require('./consumer')
 
-async function run() {
-  await initDB().then(console.log)
-    .catch(console.error)
-}
-
-
-run()
-
-
+consumer.on("data", function (msg) {
+  console.log(msg.value.toString())
+	// insert doc to DB
+  // make prediction
+});
 
 // const app = express()
 // app.use(bodyParser.json())
