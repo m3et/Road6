@@ -2,7 +2,7 @@ const simulator = require("./simulator");
 const produce_msg = require('./producer')
 
 const time = 15 * 1000
-const events = ["ENTER_SEGMENT", "EXIT_SEGMENT", "EXIT_ROAD"]
+const events = ["ENTER_SEGMENT", "EXIT_SEGMENT", "EXIT_ROAD","ENTER_ROAD"]
 
 function sleep(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
@@ -20,12 +20,17 @@ const trackCar = async function () {
 		specialDate: json.specialDate,
 	};
 
+	msg.event = events[3]; // "ENTER_ROAD"
+	var simulatedExitSegment = {simulatedExitSegment : json.exitSegment};
+	await produce_msg({...msg ,...simulatedExitSegment}); // enter road
+
+
 	for (let i = json.enterSegment; i <= json.exitSegment; i++) {
+
 		msg.segment = i;
 		msg.event = events[0];
 		// console.log(`Message: ${JSON.stringify(msg)}, Segment: ${msg.segment}, Event: ${msg.event}`)
 		// console.log(msg);
-
 		await produce_msg(msg); // enter segment
 
 		await sleep(time);
