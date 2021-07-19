@@ -4,10 +4,17 @@ const consumer = require('./consumer')
 async function run() {
   await initDB().then(console.log)
     .catch(console.error)
+
+
 }
 
 
 run()
+
+consumer.on("data", function (msg) {
+  // console.log(msg.value.toString());
+  insertDoc((JSON.parse(msg.value.toString())))  
+});
 
 
 

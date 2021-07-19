@@ -35,10 +35,6 @@ consumer.on("event.log", function (log) {
 	// console.log(log);
 });
 
-consumer.on("data", function (msg) {
-	console.log(msg.value.toString());
-	// insertDoc((JSON.parse(msg.value.toString())))
-  });
 
 
 module.exports = consumer;
