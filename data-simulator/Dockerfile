@@ -15,11 +15,17 @@ RUN  apt-get update -qqy \
       nodejs npm ca-certificates \
       && rm -rf /var/cache/apt/* /var/lib/apt/lists/*
 
-WORKDIR /usr/src/app
+# use changes to package.json to force Docker not to use the cache
+# when we change our application's nodejs dependencies:
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install
+RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
 
-COPY *.js *.json *.md /usr/src/app/
+# From here we load our application's code in, therefore the previous docker
+# "layer" thats been cached will be used if possible
+WORKDIR /usr/app
+ADD . /usr/app
 
-RUN npm install -d
 ENV LD_LIBRARY_PATH=/usr/src/app/node_modules/node-rdkafka/build/deps
 ENTRYPOINT [ "node", "app.js" ]
 CMD [ "" ]
