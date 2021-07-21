@@ -4,7 +4,7 @@ const { MongoClient } = require('mongodb')
 
 // Connection URL
 const url =
-	"mongodb+srv://raphael:SpwZ8tKKKVyE419m@datalake.idnsl.mongodb.net/test?retryWrites=true&w=majority";
+	"mongodb+srv://raphael:SpwZ8tKKKVyE419m@datalake.idnsl.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(url)
 
 // Database Name
