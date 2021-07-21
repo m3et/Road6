@@ -37,3 +37,5 @@ consumer.on("event.log", function (log) {
 });
 
 consumer.connect();
+
+module.exports = consumer

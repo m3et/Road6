@@ -1,14 +1,13 @@
-version: "3"
+version: "3.9"
 services:
-  web:
+  app:
     build: .
-    ports: 
-      - "6062:6062"
-  redis:
-    image: "redis:alpine"
     ports:
-      - "6379:6379"
-    expose:
-      - 6379
-    restart: always
-
+      - "5000:5000"
+      redis:
+        image: "redis:alpine"
+        ports:
+          - "6379:6379"
+        expose:
+          - 6379
+        restart: always
