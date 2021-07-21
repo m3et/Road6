@@ -9,23 +9,27 @@ async function run() {
 run();
 
 const carsPrediction = {};
-// each msg need to be saved in Mongo
-// then if msg.event == ENTER_ROAD make prediction
-// then if msg.event == EXIT_ROAD check prediction
+
+/**
+ *  each msg need to be saved in Mongo
+ * then if msg.event == ENTER_ROAD make prediction
+ * then if msg.event == EXIT_ROAD check prediction
+ */
+
 consumer.on("data", function (msg) {
-  
 	// console.log(msg.value.toString());
-  onData()
+
 	let obj = JSON.parse(msg.value.toString());
+	// Insert event to MongoDB
 	insertDoc(obj);
+	// make prediction
 	if (obj.event == "ENTER_ROAD") {
-    let plateNumber = obj.plateNumber;
-    carsPrediction[plateNumber] = predictExitSegment();
+		let plateNumber = obj.plateNumber;
+		carsPrediction[plateNumber] = predictExitSegment();
+	} else if (obj.event == "EXIT_ROAD") {
+		let plateNumber = obj.plateNumber;
+		carsPrediction = obj.plateNumber;
 	}
-  else if(obj.event == "EXIT_ROAD"){
-    let plateNumber = obj.plateNumber;
-    carsPrediction = obj.plateNumber;
-  }
 });
 
 // const app = express()
