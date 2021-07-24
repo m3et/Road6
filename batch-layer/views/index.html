@@ -6,7 +6,15 @@
         google.charts.load('current', {
             'packages': ['table']
         });
-        google.charts.setOnLoadCallback(drawTable);
+        google.charts.setOnLoadCallback(function () {
+            drawTable([
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ])
+        });
 
         function drawTable(table) {
             var data = new google.visualization.arrayToDataTable(table, true);

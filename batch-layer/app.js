@@ -19,10 +19,6 @@ const {
 // kafka consumer
 const consumer = require("./consumer");
 
-// view engine setup
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
-
 async function run() {
 	await initDB().then(console.log).catch(console.error);
 }
@@ -53,7 +49,7 @@ consumer.on("data", function (msg) {
 });
 
 app.get("/", (req, res) => {
-	res.render("index");
+	res.sendFile("index.html", { root: path.join(__dirname, "views/") });
 });
 
 io.on("connection", (socket) => {
