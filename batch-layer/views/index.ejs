@@ -1,0 +1,38 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {
+            'packages': ['table']
+        });
+        google.charts.setOnLoadCallback(drawTable);
+
+        function drawTable(table) {
+            var data = new google.visualization.arrayToDataTable(table, true);
+
+            var table = new google.visualization.Table(document.getElementById('table_div'));
+
+            table.draw(data, {
+                showRowNumber: false,
+                width: '75%',
+                height: '50%'
+            });
+        }
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        socket.on("new_prediction", (table) => {
+            // alert(table)
+            drawTable(table);
+        })
+    </script>
+</head>
+
+<body>
+    <div id="table_div"></div>
+</body>
+
+</html>

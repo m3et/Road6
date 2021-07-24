@@ -35,6 +35,4 @@ consumer.on("event.log", function (log) {
 	// console.log(log);
 });
 
-
-
 module.exports = consumer;

@@ -1,41 +1,69 @@
+// express
+const express = require("express");
+const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const path = require("path");
+// Socket.io
+const { Server } = require("socket.io");
+const io = new Server(server);
+// database
 const { initDB, insertDoc, closeDB } = require("./db");
-const { predictExitSegment } = require("./bigML");
+// predictions
+const {
+	predictionOnEnter,
+	predictionOnExit,
+	predictionCounter,
+	confusionMatrix,
+} = require("./prediction");
+// kafka consumer
 const consumer = require("./consumer");
+
+// view engine setup
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
 async function run() {
 	await initDB().then(console.log).catch(console.error);
 }
-
 run();
 
-const carsPrediction = {};
-
 /**
- *  each msg need to be saved in Mongo
+ * each msg need to be saved in Mongo
  * then if msg.event == ENTER_ROAD make prediction
- * then if msg.event == EXIT_ROAD check prediction
- */
-
+ * then if msg.event == EXIT_ROAD check prediction update confusion matrix & UI table
+ **/
 consumer.on("data", function (msg) {
 	// console.log(msg.value.toString());
 
-	let obj = JSON.parse(msg.value.toString());
+	let event = JSON.parse(msg.value.toString());
 	// Insert event to MongoDB
-	insertDoc(obj);
+	insertDoc(event);
 	// make prediction
-	if (obj.event == "ENTER_ROAD") {
-		let plateNumber = obj.plateNumber;
-		carsPrediction[plateNumber] = predictExitSegment();
-	} else if (obj.event == "EXIT_ROAD") {
-		let plateNumber = obj.plateNumber;
-		carsPrediction = obj.plateNumber;
+	let plateNumber = event.plateNumber;
+	let eventType = event.event;
+	if (eventType == "ENTER_ROAD") {
+		predictionOnEnter(event);
+	} else if (eventType == "EXIT_ROAD") {
+		predictionOnExit(event);
+		json_table = JSON.stringify(confusionMatrix);
+		console.log(json_table);
+		io.emit("new_prediction", confusionMatrix);
 	}
 });
 
-// const app = express()
-// app.use(bodyParser.json())
-// app.use(routes)
+app.get("/", (req, res) => {
+	res.render("index");
+});
 
-// init().then(() => {
-//   console.log('starting server on port 3000')
-//   app.listen(3000)
+io.on("connection", (socket) => {
+	console.log("a user connected");
+	socket.on("disconnect", () => {
+		console.log("user disconnected");
+	});
+});
+
+const port = 3000;
+server.listen(port, () => {
+	console.log(`app listening at http://localhost:${port}`);
+});

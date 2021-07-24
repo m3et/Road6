@@ -25,7 +25,7 @@ RUN mkdir -p /usr/app && cp -a /tmp/node_modules /usr/app/
 WORKDIR /usr/app
 ADD . /usr/app
 
-EXPOSE 8080
+EXPOSE 3000
 
 ENTRYPOINT [ "node", "app.js" ]
 CMD [ "" ]
