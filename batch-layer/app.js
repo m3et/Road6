@@ -13,7 +13,6 @@ const { initDB, insertDoc, closeDB } = require("./db");
 const {
 	predictionOnEnter,
 	predictionOnExit,
-	predictionCounter,
 	confusionMatrix,
 } = require("./prediction");
 // kafka consumer
@@ -30,20 +29,15 @@ run();
  * then if msg.event == EXIT_ROAD check prediction update confusion matrix & UI table
  **/
 consumer.on("data", function (msg) {
-	// console.log(msg.value.toString());
-
 	let event = JSON.parse(msg.value.toString());
 	// Insert event to MongoDB
 	insertDoc(event);
 	// make prediction
-	let plateNumber = event.plateNumber;
 	let eventType = event.event;
 	if (eventType == "ENTER_ROAD") {
 		predictionOnEnter(event);
 	} else if (eventType == "EXIT_ROAD") {
 		predictionOnExit(event);
-		json_table = JSON.stringify(confusionMatrix);
-		console.log(json_table);
 		io.emit("new_prediction", confusionMatrix);
 	}
 });

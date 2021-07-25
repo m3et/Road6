@@ -1,46 +1,64 @@
 <html>
+	<style>
+		.google-visualization-table-td {
+			text-align: center !important;
+		}
+	</style>
+	<head>
+		<script
+			type="text/javascript"
+			src="https://www.gstatic.com/charts/loader.js"
+		></script>
+		<script type="text/javascript">
+			google.charts.load("current", {
+				packages: ["table"],
+			});
+			google.charts.setOnLoadCallback(function () {
+				drawTable([
+					[0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0],
+				]);
+			});
 
-<head>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        google.charts.load('current', {
-            'packages': ['table']
-        });
-        google.charts.setOnLoadCallback(function () {
-            drawTable([
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0]
-            ])
-        });
+			function drawTable(table) {
+				var data = new google.visualization.arrayToDataTable(table, true);
 
-        function drawTable(table) {
-            var data = new google.visualization.arrayToDataTable(table, true);
+				var table = new google.visualization.Table(
+					document.getElementById("table_div")
+				);
 
-            var table = new google.visualization.Table(document.getElementById('table_div'));
+				var options = {
+					titleTextStyle: {
+						color: "red", // any HTML string color ('red', '#cc00cc')
+						fontName: "Times New Roman", // i.e. 'Times New Roman'
+						fontSize: 1515, // 12, 18 whatever you want (don't specify px)
+						bold: true, // true or false
+						italic: true, // true of false
+					},
+					showRowNumber: false,
+					width: "100%",
+					height: "100%",
+					title: "Confusion Matrix",
+				};
 
-            table.draw(data, {
-                showRowNumber: false,
-                width: '75%',
-                height: '50%'
-            });
-        }
-    </script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        var socket = io();
+				table.draw(data, options);
+			}
+		</script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			var socket = io();
 
-        socket.on("new_prediction", (table) => {
-            // alert(table)
-            drawTable(table);
-        })
-    </script>
-</head>
+			socket.on("new_prediction", (table) => {
+				// alert(table)
+				drawTable(table);
+			});
+		</script>
+	</head>
 
-<body>
-    <div id="table_div"></div>
-</body>
-
+	<body>
+		<div id="table_div"></div>
+	</body>
 </html>
