@@ -1,100 +1,153 @@
 const consumer = require("./consumer");
 var redis = require("redis");
-var redisClient = redis.createClient("redis://redis:6379");
+// var redisClient = redis.createClient("redis://redis:6379");
+var redisClient = redis.createClient();
+
+
+const express = require("express");
+const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const path = require("path");
+// Socket.io
+const { Server } = require("socket.io");
+const io = new Server(server);
+
+
 
 redisClient.on("error", function (err, reply) {
 	console.log(err);
-	console.log("on Error");
 });
 
-// number of cars on road changes on events "enter road" or "exit road" and needs to be shown on dashboard
-numberOfCarOnRoad = 0;
-redisClient.set("numberOfCarOnRoad", numberOfCarOnRoad, function (err, reply) {
+redisClient.set("CarsOnRoad", "0", function (err, reply) {
 	console.log(reply);
 });
 
-redisClient.get("timor", function (err, reply) {
-	console.log(reply);
-	console.log("on Get");
-});
-
-// number of cars on Seg1 changes on events "enter segment" or "exit segment"  & segment number 1 and need to be updated in redis
-numberOfCarOnSeg1 = 0;
-redisClient.set("numberOfCarOnSeg1", numberOfCarOnSeg1, function (err, reply) {
+redisClient.set("CarsOnSeg1", "0", function (err, reply) {
 	console.log(reply);
 });
 
-// number of cars on Seg2 changes on events "enter segment" or "exit segment"  & segment number 2 and need to be updated in redis
-numberOfCarOnSeg2 = 0;
-redisClient.set("numberOfCarOnSeg2", numberOfCarOnSeg2, function (err, reply) {
+redisClient.set("CarsOnSeg2", "0", function (err, reply) {
 	console.log(reply);
-	console.log("on Set");
+
 });
 
-// number of cars on Seg3 changes on events "enter segment" or "exit segment"  & segment number 3 and need to be updated in redis
-numberOfCarOnSeg3 = 0;
-redisClient.set("numberOfCarOnSeg3", numberOfCarOnSeg3, function (err, reply) {
+redisClient.set("CarsOnSeg3", "0", function (err, reply) {
 	console.log(reply);
 });
 
-// number of cars on Seg4 changes on events "enter segment" or "exit segment"  & segment number 4 and need to be updated in redis
-numberOfCarOnSeg4 = 0;
-redisClient.set("numberOfCarOnSeg4", numberOfCarOnSeg4, function (err, reply) {
+redisClient.set("CarsOnSeg4", "0", function (err, reply) {
 	console.log(reply);
 });
 
-// number of cars on Seg5 changes on events "enter segment" or "exit segment" & segment number 5 and need to be updated in redis
-numberOfCarOnSeg5 = 0;
-redisClient.set("numberOfCarOnSeg5", numberOfCarOnSeg5, function (err, reply) {
+redisClient.set("CarsOnSeg5", "0", function (err, reply) {
 	console.log(reply);
 });
 
 consumer.on("data", function (msg) {
-	console.log("on Data");
-	console.log(msg.value.toString());
+
+	
 
 	var obj = JSON.parse(msg.value);
-
+ 
 	if (obj.event == "ENTER_ROAD") {
-		numberOfCarOnRoad++;
-	} // need to enter plate number to list of plates and update the dashboard
+		redisClient.incr("CarsOnRoad", function (err, reply) {
+			console.log("CarsOnRoad   " + reply);
+		});
+		redisClient.rpush("plateList", String(obj.plateNumber) , function (err, reply) {
+			console.log("list push " + reply);
+
+			
+		});
+	}
 
 	if (obj.event == "EXIT_ROAD") {
-		numberOfCarOnRoad--;
-	} // need to remove plate number from list of plates and update the dashboard
+		redisClient.decr("CarsOnRoad", function (err, reply) {
+			console.log( "CarsOnRoad   " + reply);
+		});
+		redisClient.lrem("list", 0, String(obj.plateNumber), function (err, reply) {
+			console.log("list remove    " + reply);
+		});
+	}
 
-	if (obj.event == "ENTER_SEGMENT" && segment == 1) {
-		numberOfCarOnSeg1++;
-	} // need to change in redis- for key "numberOfCarOnSeg1" update value
-	if (obj.event == "EXIT_SEGMENT" && segment == 1) {
-		numberOfCarOnSeg1--;
-	} // need to change in redis- for key "numberOfCarOnSeg1" update value
+	if (obj.event == "ENTER_SEGMENT" && obj.segment == 1) {
+		redisClient.incr("CarsOnSeg1", function (err, reply) {
+			console.log("CarsOn seg 1   " + reply);
+		});
+	}
 
-	if (obj.event == "ENTER_SEGMENT" && segment == 2) {
-		numberOfCarOnSeg2++;
-	} // need to change in redis- for key "numberOfCarOnSeg2" update value
-	if (obj.event == "EXIT_SEGMENT" && segment == 2) {
-		numberOfCarOnSeg2--;
-	} // need to change in redis- for key "numberOfCarOnSeg2" update value
+	if (obj.event == "EXIT_SEGMENT" && obj.segment == 1) {
+		redisClient.decr("CarsOnSeg1", function (err, reply) {
+			console.log("CarsOn seg 1   " + reply);
+		});
+	}
 
-	if (obj.event == "ENTER_SEGMENT" && segment == 3) {
-		numberOfCarOnSeg3++;
-	} // need to change in redis- for key "numberOfCarOnSeg3" update value
-	if (obj.event == "EXIT_SEGMENT" && segment == 3) {
-		numberOfCarOnSeg3--;
-	} // need to change in redis- for key "numberOfCarOnSeg3" update value
+	if (obj.event == "ENTER_SEGMENT" && obj.segment == 2) {
+		redisClient.incr("CarsOnSeg2", function (err, reply) {
+			console.log("CarsOn seg 2    " +  reply);
+		});
+	}
 
-	if (obj.event == "ENTER_SEGMENT" && segment == 4) {
-		numberOfCarOnSeg4++;
-	} // need to change in redis- for key "numberOfCarOnSeg4" update value
-	if (obj.event == "EXIT_SEGMENT" && segment == 4) {
-		numberOfCarOnSeg4--;
-	} // need to change in redis- for key "numberOfCarOnSeg4" update value
+	if (obj.event == "EXIT_SEGMENT" && obj.segment == 2) {
+		redisClient.decr("CarsOnSeg2", function (err, reply) {
+			console.log("CarsOn seg 2    " + reply);
+		});
+	}
 
-	if (obj.event == "ENTER_SEGMENT" && segment == 5) {
-		numberOfCarOnSeg5++;
-	} // need to change in redis- for key "numberOfCarOnSeg5" update value
-	if (obj.event == "EXIT_SEGMENT" && segment == 5) {
-		numberOfCarOnSeg5--;
-	} // need to change in redis- for key "numberOfCarOnSeg5" update value
+	if (obj.event == "ENTER_SEGMENT" && obj.segment == 3) {
+		redisClient.incr("CarsOnSeg3", function (err, reply) {
+			console.log("CarsOn seg 3    " + reply);
+		});
+	}
+
+	if (obj.event == "EXIT_SEGMENT" && obj.segment == 3) {
+		redisClient.decr("CarsOnSeg3", function (err, reply) {
+			console.log("CarsOn seg 3     " + reply);
+		});
+	}  
+
+	if (obj.event == "ENTER_SEGMENT" && obj.segment == 4) {
+		redisClient.incr("CarsOnSeg4", function (err, reply) {
+			console.log("CarsOn seg 4    " + reply);
+		});
+	}
+
+	if (obj.event == "EXIT_SEGMENT" && obj.segment == 4) {
+		redisClient.decr("CarsOnSeg4", function (err, reply) {
+			console.log("CarsOn seg 4    " + reply);
+		});
+	}
+
+	if (obj.event == "ENTER_SEGMENT" && obj.segment == 5) {
+		redisClient.incr("CarsOnSeg5", function (err, reply) {
+			console.log("CarsOn seg 5    " + reply);
+		});
+	}
+
+	if (obj.event == "EXIT_SEGMENT" && obj.segment == 5) {
+		redisClient.decr("CarsOnSeg5", function (err, reply) {
+			console.log("CarsOnseg 5    " + reply);
+		});
+	}
 });
+
+
+
+app.get("/", (req, res) => {
+	res.sendFile("index.html", { root: path.join(__dirname, "views/") });
+});
+
+io.on("connection", (socket) => {
+	console.log("a user connected");
+	socket.on("disconnect", () => {
+		console.log("user disconnected");
+	});
+});
+
+const port = 8000;
+server.listen(port, () => {
+	console.log(`app listening at http://localhost:${port}`);
+});
+
+
+
