@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    <title>Confusion Matrix</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', {
@@ -23,8 +24,9 @@
 
             table.draw(data, {
                 showRowNumber: false,
-                width: '75%',
-                height: '50%'
+                width: '100%',
+                height: '100%',
+                title: 'Confusion Matrix'
             });
         }
     </script>
