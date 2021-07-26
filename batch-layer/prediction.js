@@ -1,7 +1,7 @@
 let carsPrediction = {};
 let predictionCounter = 0;
 let wrongPrediction = 0;
-errRate = 0;
+let errRate = 0;
 let confusionMatrix = [
 	[0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0],
@@ -26,7 +26,7 @@ predictionOnExit = (event) => {
 		errRate = wrongPrediction / predictionCounter;
 		confusionMatrix[predictExitSegment - 1][actualExitSegment - 1]++;
 
-		console.log(
+		return(
 			`predicted ${predictExitSegment}, actual ${actualExitSegment}, rightPredict ${
 				predictionCounter - wrongPrediction
 			}, wrongPredict ${wrongPrediction}, errRate ${errRate}, total ${predictionCounter}`
@@ -1001,4 +1001,6 @@ module.exports = {
 	predictionOnExit,
 	predictionCounter,
 	confusionMatrix,
+	errRate,
+	wrongPrediction,
 };

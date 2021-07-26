@@ -1,4 +1,5 @@
 <html>
+	<title>Confusion Matrix</title>
 	<style>
 		.google-visualization-table-td {
 			text-align: center !important;
@@ -40,7 +41,7 @@
 					},
 					showRowNumber: false,
 					width: "100%",
-					height: "100%",
+					height: "75%",
 					title: "Confusion Matrix",
 				};
 
@@ -48,17 +49,21 @@
 			}
 		</script>
 		<script src="/socket.io/socket.io.js"></script>
-		<script>
-			var socket = io();
-
-			socket.on("new_prediction", (table) => {
-				// alert(table)
-				drawTable(table);
-			});
-		</script>
 	</head>
 
 	<body>
 		<div id="table_div"></div>
+		<p id="info">rightPredict 0, wrongPredict 0, errRate 0, total 0</p>
 	</body>
+
+	<script>
+		var socket = io();
+
+		socket.on("new_prediction", (table, information) => {
+			// alert(table)
+			drawTable(table);
+			// console.log(information);
+			document.getElementById("info").innerHTML = information;
+		});
+	</script>
 </html>

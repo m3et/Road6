@@ -13,10 +13,14 @@ const { initDB, insertDoc, closeDB } = require("./db");
 const {
 	predictionOnEnter,
 	predictionOnExit,
+	predictionCounter,
 	confusionMatrix,
+	errRate,
+	wrongPrediction,
 } = require("./prediction");
 // kafka consumer
 const consumer = require("./consumer");
+const { info } = require("console");
 
 async function run() {
 	await initDB().then(console.log).catch(console.error);
@@ -37,8 +41,10 @@ consumer.on("data", function (msg) {
 	if (eventType == "ENTER_ROAD") {
 		predictionOnEnter(event);
 	} else if (eventType == "EXIT_ROAD") {
-		predictionOnExit(event);
-		io.emit("new_prediction", confusionMatrix);
+		let info = predictionOnExit(event);
+
+		console.log(info);
+		io.emit("new_prediction", confusionMatrix, info);
 	}
 });
 
