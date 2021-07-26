@@ -1,4 +1,3 @@
-
 <html>
 	<title>Confusion Matrix</title>
 	<style>
@@ -7,6 +6,10 @@
 		}
 	</style>
 	<head>
+		<script
+			type="text/javascript"
+			src="https://www.gstatic.com/charts/loader.js"
+		></script>
 		<script type="text/javascript">
 			google.charts.load("current", {
 				packages: ["table"],
@@ -21,27 +24,46 @@
 				]);
 			});
 
-			var table = new google.visualization.Table(
-				document.getElementById("table_div")
-			);
+			function drawTable(table) {
+				var data = new google.visualization.arrayToDataTable(table, true);
 
-			var options = {
-				showRowNumber: false,
-				width: "100%",
-				height: "75%",
-				title: "Confusion Matrix",
-			};
+				var table = new google.visualization.Table(
+					document.getElementById("table_div")
+				);
+
+				var options = {
+					titleTextStyle: {
+						color: "red", // any HTML string color ('red', '#cc00cc')
+						fontName: "Times New Roman", // i.e. 'Times New Roman'
+						fontSize: 1515, // 12, 18 whatever you want (don't specify px)
+						bold: true, // true or false
+						italic: true, // true of false
+					},
+					showRowNumber: false,
+					width: "100%",
+					height: "75%",
+					title: "Confusion Matrix",
+				};
+
+				table.draw(data, options);
+			}
 		</script>
+		<script src="/socket.io/socket.io.js"></script>
+	</head>
 
-		<script>
-			var socket = io();
+	<body>
+		<div id="table_div"></div>
+		<p id="info">rightPredict 0, wrongPredict 0, errRate 0, total 0</p>
+	</body>
 
-			socket.on("new_prediction", (table, information) => {
-				// alert(table)
-				drawTable(table);
-				// console.log(information);
-				document.getElementById("info").innerHTML = information;
-			});
-		</script></head
-	>>
+	<script>
+		var socket = io();
+
+		socket.on("new_prediction", (table, information) => {
+			// alert(table)
+			drawTable(table);
+			// console.log(information);
+			document.getElementById("info").innerHTML = information;
+		});
+	</script>
 </html>
