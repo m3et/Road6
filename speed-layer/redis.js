@@ -2,8 +2,8 @@ const redis = require("redis");
 const { promisifyAll } = require('bluebird');
 
 promisifyAll(redis);
-// var redisClient = redis.createClient("redis://redis:6379");
-const redisClient = redis.createClient();
+var redisClient = redis.createClient("redis://redis:6379");
+// const redisClient = redis.createClient();
 
 redisClient.on("error", function (err, reply) {
 	console.log(err);
