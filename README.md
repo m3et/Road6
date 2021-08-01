@@ -1,18 +1,20 @@
-# ROAD 6
+# **ROAD 6**
 
-Project represent a road with cars entering and exiting at different rates., we used Lambda architecture consists of three main service component running separately to allow real time data processing as well as batch processing and ML predictions using BigML.
+Project represent a road divided with segments and cars entering and exiting at different rates and places.
 
-# Tools and Frameworks used:
+We used Lambda architecture consists of three main service component running separately to allow near real time data processing as well as batch processing and ML predictions using BigML.
 
-Node.js
-Express.js
-Kafka
-Socket.io
-MongoDB
-Redis
-BigML
+## Tools and Frameworks used:
 
-# Batch layer
+- Node.js
+- Express.js
+- Kafka
+- Socket.<area>IO
+- MongoDB
+- Redis
+- BigML
+
+## Batch layer
 
 Batch layer provides the functionality of append-only set of raw data and computed batch views.
 
@@ -20,19 +22,19 @@ The batch layer insert the data to MongoDB and each time a new cars enter the ro
 
 It serves as correction of the speed layer because it can aggregate large volumes of historical data.
 
-# Speed layer
+## Speed layer
 
 Speed layer processes data consumed from Kafka in real time and compute and update the dashboard.
 
-It is responsible for filling real time update and monitoring of the car status on the road0
+It is responsible for filling real time update to Redis and dashboard monitoring of the car status on the road using Socket.io
 
-By operating on smaller windows of data it can provide fast, real time views of real time data.
+By caching data on redis it can provide fast, real time views of real time data.
 
-# Data Simulator
+## Data Simulator
 
 Data Simulator produce data to Kafka which is the consumed by the other layer.
 
-The data is of the form of "events" simulating real car entry and exiting from the road.
+The data is of the form of "events" simulating real car entry and exiting from the road or road segment.
 
 ---
 
@@ -77,16 +79,17 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 
     $ git clone https://github.com/m3et/Road6
     $ cd Road6
-    $ if wish to run locally : npm install
+    if wish to run locally:
+    $ npm install
 
 ## Running the project
 
     docker-compose up
 
-# Accessing Dashboard
+## Accessing Dashboard
 
-localhost:4000
+    localhost:4000
 
-# Accessing Confusion-Matrix
+## Accessing Confusion-Matrix
 
-localhost:3000
+    localhost:3000
