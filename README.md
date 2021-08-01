@@ -38,6 +38,27 @@ The data is of the form of "events" simulating real car entry and exiting from t
 
 ---
 
+## Install
+
+    $ git clone https://github.com/m3et/Road6
+    $ cd Road6
+    if wish to run locally:
+    $ npm install
+
+## Running the project
+
+    docker-compose up
+
+## Accessing Dashboard
+
+    localhost:4000
+
+## Accessing Confusion-Matrix
+
+    localhost:3000
+
+---
+
 ## Running Requirements
 
 You will only need Docker installed in your environnement, or Node.js then npm install locally.
@@ -72,24 +93,3 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
     $ npm install npm -g
 
 ###
-
----
-
-## Install
-
-    $ git clone https://github.com/m3et/Road6
-    $ cd Road6
-    if wish to run locally:
-    $ npm install
-
-## Running the project
-
-    docker-compose up
-
-## Accessing Dashboard
-
-    localhost:4000
-
-## Accessing Confusion-Matrix
-
-    localhost:3000
