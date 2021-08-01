@@ -8,6 +8,7 @@ We used Lambda architecture consists of three main service component running sep
 
 - Node.js
 - Express.js
+- Docker
 - Kafka
 - Socket.<area>IO
 - MongoDB
