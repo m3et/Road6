@@ -3,15 +3,14 @@ services:
   data-simulator:
     container_name: data-simulator
     build: ./data-simulator
-    ports:
-      - "3000:3000"
+    depends_on:
+      - batch-layer
+      - speed-layer
   batch-layer:
     container_name: batch-layer
     build: ./batch-layer
     ports:
       - "3000:3000"
-    depends_on:
-      - data-simulator
   redis:
     container_name: redis
     image: "redis"
@@ -19,7 +18,8 @@ services:
       - "6379:6379"
   speed-layer:
     depends_on:
-      - data-simulator
       - redis
+    ports:
+      - "4000:4000"
     build: ./speed-layer
     container_name: speed-layer

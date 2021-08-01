@@ -78,7 +78,7 @@ io.on("connection", (socket) => {
 	});
 });
 
-const port = 3000;
+const port = 4000;
 app.use(express.static('public'));
 
 server.listen(port, () => {
