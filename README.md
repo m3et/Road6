@@ -1,6 +1,6 @@
 # **ROAD 6**
 
-Project represent a road divided with segments and cars entering and exiting at different rates and places.
+Project simulating a road divided with segments and cars entering and exiting at different rates and places.
 
 We used Lambda architecture consists of three main service component running separately to allow near real time data processing as well as batch processing and ML predictions using BigML.
 
