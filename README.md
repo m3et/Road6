@@ -60,7 +60,7 @@ The data is of the form of "events" simulating real car entry and exiting from t
 
 ---
 
-## Running Requirements
+## Local Running Requirements
 
 You will only need Docker installed in your environnement, or Node.js then npm install locally.
 
