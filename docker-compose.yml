@@ -19,6 +19,8 @@ services:
   speed-layer:
     depends_on:
       - redis
+    ports:
+      - "4000:4000"
     build: ./speed-layer
     container_name: speed-layer
     ports:
