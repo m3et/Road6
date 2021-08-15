@@ -12,6 +12,9 @@ const io = new Server(server);
 // redis client
 const redisClient = require("./redis");
 
+// controller
+const getDashboard = require("./controllers/dashboard");
+
 let callbackRedis = (error, result) => {
 	if (error !== null) {
 		console.log("Caught error: " + String(error));
@@ -67,9 +70,7 @@ consumer.on("data", async (msg) => {
 	io.emit("new_data", data);
 });
 
-app.get("/", (req, res) => {
-	res.sendFile("index.html", { root: path.join(__dirname, "views/") });
-});
+app.get("/", getDashboard);
 
 io.on("connection", (socket) => {
 	console.log("a user connected");
@@ -79,7 +80,7 @@ io.on("connection", (socket) => {
 });
 
 const port = 4000;
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 server.listen(port, () => {
 	console.log(`app listening at http://localhost:${port}`);

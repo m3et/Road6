@@ -21,6 +21,7 @@ const {
 // kafka consumer
 const consumer = require("./consumer");
 const { info } = require("console");
+const getConfusionMatrix = require('./controllers/confusionMatrix')
 
 async function run() {
 	await initDB().then(console.log).catch(console.error);
@@ -48,9 +49,7 @@ consumer.on("data", function (msg) {
 	}
 });
 
-app.get("/", (req, res) => {
-	res.sendFile("index.html", { root: path.join(__dirname, "views/") });
-});
+
 
 io.on("connection", (socket) => {
 	console.log("a user connected");
@@ -58,6 +57,8 @@ io.on("connection", (socket) => {
 		console.log("user disconnected");
 	});
 });
+
+app.get("/", getConfusionMatrix);
 
 const port = 3000;
 server.listen(port, () => {
